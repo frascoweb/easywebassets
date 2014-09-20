@@ -17,26 +17,23 @@ class Assets(object):
                 self.register(name, pkg)
             return
 
-        if len(args) == 0:
-            raise TypeError('at least two arguments are required')
+        if len(args) == 1 and not kwargs and isinstance(args[0], (Package, Bundle)):
+            item = args[0]
         else:
-            if len(args) == 1 and not kwargs and isinstance(args[0], (Package, Bundle)):
-                item = args[0]
-            else:
-                if len(args) == 1 and isinstance(args[0], list):
-                    args = args[0]
-                item = Package(*args, **kwargs)
+            if len(args) == 1 and isinstance(args[0], list):
+                args = args[0]
+            item = Package(*args, **kwargs)
 
-            if name in self.env or name in self.packages:
-                raise RegisterError('Another bundle or package is already registered '+
-                                    'as "%s"' % name)
-            elif isinstance(item, Bundle):
-                self.env.register(name, item)
-            else:
-                self.packages[name] = item
-                item.env = self
+        if name in self.env or name in self.packages:
+            raise RegisterError('Another bundle or package is already registered '+
+                                'as "%s"' % name)
+        elif isinstance(item, Bundle):
+            self.env.register(name, item)
+        else:
+            self.packages[name] = item
+            item.env = self
 
-            return item
+        return item
 
     def __getitem__(self, name):
         return self.packages[name]
