@@ -51,6 +51,10 @@ def asset_type(name=None, exts=None):
     return decorator
 
 
+def list_asset_types():
+    return six.itervalues(_asset_types)
+
+
 def get_asset_type(name):
     if name not in _asset_types:
         raise UnknownAssetTypeError("Unknown asset type '%s'" % name)

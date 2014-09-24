@@ -1,5 +1,5 @@
-from webassets import Environment, Bundle, six
-from webassets.env import RegisterError, BaseEnvironment
+from webassets import Environment, six
+from webassets.env import RegisterError
 from .package import Package
 
 
@@ -17,21 +17,21 @@ class Assets(object):
                 self.register(name, pkg)
             return
 
-        if len(args) == 1 and not kwargs and isinstance(args[0], (Package, Bundle)):
+        if len(args) == 1 and not kwargs and isinstance(args[0], Package):
             item = args[0]
         else:
             if len(args) == 1 and isinstance(args[0], list):
                 args = args[0]
+            elif len(args) == 1 and isinstance(args[0], dict):
+                kwargs = args[0]
+                args = kwargs.pop('contents')
             item = Package(*args, **kwargs)
 
-        if name in self.env or name in self.packages:
+        if name in self.packages:
             raise RegisterError('Another bundle or package is already registered '+
                                 'as "%s"' % name)
-        elif isinstance(item, Bundle):
-            self.env.register(name, item)
-        else:
-            self.packages[name] = item
-            item.env = self
+        self.packages[name] = item
+        item.env = self
 
         return item
 
