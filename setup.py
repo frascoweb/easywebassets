@@ -1,14 +1,6 @@
 from setuptools import setup, find_packages
 
 
-def desc():
-    with open("README.md") as f:
-        return f.read()
-
-def reqs():
-    with open('requirements.txt') as f:
-        return f.read().splitlines()
-
 setup(
     name='easywebassets',
     version='0.1',
@@ -17,10 +9,8 @@ setup(
     author='Maxime Bouroumeau-Fuseau',
     author_email='maxime.bouroumeau@gmail.com',
     description='An easier way to use webassets',
-    long_description=desc(),
     packages=find_packages(),
-    include_package_data=True,
     zip_safe=False,
     platforms='any',
-    install_requires=reqs()
+    install_requires=['webassets']
 )
